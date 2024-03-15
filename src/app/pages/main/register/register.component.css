@@ -1,0 +1,29 @@
+
+
+
+
+.card {
+  width: 100%;
+  display: flex;
+  margin: 10px auto;
+  justify-content: center;
+}
+
+.nz-card{
+width:500px;
+}
+
+[nz-button] {
+  color: aliceblue;
+  background-color: lightcoral;
+  border-radius: 5px;
+  border:white;
+  float: right;
+
+}
+
+
+.input{
+
+  margin-left: 40px;
+}

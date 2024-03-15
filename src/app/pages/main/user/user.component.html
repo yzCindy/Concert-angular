@@ -1,0 +1,138 @@
+<div class="card">
+  <nz-card nzTitle="個人資料" nzHoverable class="nz-card" [nzExtra]="extraTemplate">
+    <form nz-form *ngIf="!modify">
+      <div class="input">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7">
+            帳號 Login Email</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input value="test@gmail.com" disabled>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7">
+            密碼 Password</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input value="****" disabled>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7">
+            會員全名 name</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input value="陳小明" disabled>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7">
+            手機 Mobile</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input value="0911223345" disabled>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </form>
+
+
+
+
+
+    <div class="input">
+      <form nz-form [nzAutoTips]="autoTips" [formGroup]="validateForm" (ngSubmit)="submitForm()" *ngIf="modify">
+
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7">
+            帳號 Login Email</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input value="test@gmail.com" disabled>
+          </nz-form-control>
+        </nz-form-item>
+
+
+
+        <nz-form-item *ngIf="!pwdmodify">
+          <nz-form-label [nzSpan]="7">密碼  Password</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input value="****" disabled>
+            <button nz-button nzType="primary" (click)="pwdmodifyFn()" [nzSize]="'small'" *ngIf="!pwdmodify">
+              修改
+            </button>
+
+          </nz-form-control>
+        </nz-form-item>
+
+
+
+        <nz-form-item *ngIf="pwdmodify">
+          <nz-form-label [nzSpan]="7" nzRequired>輸入新密碼</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzDisableAutoTips nzErrorTip="Please input your password!">
+            <input nz-input type="password" formControlName="password" (ngModelinput)="validateConfirmPassword()"
+              value="hahaha" />
+          </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item *ngIf="pwdmodify">
+          <nz-form-label [nzSpan]="7" nzRequired>再次確認新密碼 </nz-form-label>
+          <nz-form-control [nzSpan]="12" nzDisableAutoTips [nzErrorTip]="passwordErrorTpl">
+            <input nz-input type="password" formControlName="confirm" placeholder="confirm your password" />
+            <ng-template #passwordErrorTpl let-control>
+              @if (control.errors?.['required']) {
+              Please confirm your password!
+              }
+              @if (control.errors?.['confirm']) {
+              Password is inconsistent!
+              }
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+
+
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>會員全名 name</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzValidatingTip="Validating...">
+            <input nz-input formControlName="name" placeholder="你好" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>手機 Mobile</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="mobile" placeholder="mobile" />
+          </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>地址 Address</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzValidatingTip="Validating...">
+            <input nz-input formControlName="address" placeholder="地址" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item *ngIf="modify">
+          <nz-form-control [nzOffset]="7" [nzSpan]="12">
+            <button nz-button nzType="primary" routerLink="/welcome">Submit</button>
+            <button nz-button nzType="primary" routerLink="/welcome">Cancel</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+    <nz-divider nzType="horizontal"></nz-divider>
+  </nz-card>
+  <ng-template #extraTemplate>
+    <button nz-button nzType="primary" (click)="modifyFn()" *ngIf="!modify">
+      修改
+    </button>
+  </ng-template>
+
+</div>
+<div>
+
+</div>

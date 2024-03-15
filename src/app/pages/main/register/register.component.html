@@ -1,0 +1,84 @@
+<div class="card">
+  <nz-card nzTitle="註冊"  nzHoverable class="nz-card"  >
+
+    <form nz-form [nzAutoTips]="autoTips" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+
+      <div class="input">
+
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>帳號 Login Email</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <input nz-input formControlName="email" placeholder="email" type="email" />
+        </nz-form-control>
+      </nz-form-item>
+
+
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>密碼 Password</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzDisableAutoTips nzErrorTip="Please input your password!">
+          <input nz-input type="password" formControlName="password" (ngModelChange)="validateConfirmPassword()" />
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="12" nzRequired>確認密碼 Confirm Password</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzDisableAutoTips [nzErrorTip]="passwordErrorTpl">
+          <input nz-input type="password" formControlName="confirm" placeholder="confirm your password" />
+          <ng-template #passwordErrorTpl let-control>
+            @if (control.errors?.['required']) {
+              Please confirm your password!
+            }
+            @if (control.errors?.['confirm']) {
+              Password is inconsistent!
+            }
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>會員全名 name</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzValidatingTip="Validating...">
+          <input nz-input formControlName="name" placeholder="你好" />
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>手機 Mobile</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <input nz-input formControlName="mobile" placeholder="mobile" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>地址 Address</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzValidatingTip="Validating...">
+          <input nz-input formControlName="address" placeholder="地址" />
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <nz-form-item>
+        <nz-form-control [nzOffset]="8" [nzSpan]="12">
+          <button nz-button nzType="primary">Submit</button>
+        </nz-form-control>
+      </nz-form-item>
+      </div>
+
+    </form>
+
+
+
+
+  <nz-divider nzType="horizontal"></nz-divider>
+
+  </nz-card>
+
+</div>
+<div>
+
+</div>

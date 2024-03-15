@@ -1,0 +1,35 @@
+.card {
+  width: 100%;
+  display: flex;
+  margin: 10px auto;
+  justify-content: center;
+}
+
+.nz-card {
+  width: 400px;
+}
+
+[nz-button] {
+  width: 100px;
+  color: aliceblue;
+  background-color: lightcoral;
+  border-radius: 5px;
+  border: white;
+  display: block;
+  margin: auto;
+
+}
+
+.forgot {
+  display: inline;
+  margin: auto;
+  float: right;
+
+
+}
+
+.forgot a {
+color: lightcoral;
+
+
+}

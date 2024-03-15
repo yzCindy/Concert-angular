@@ -1,0 +1,65 @@
+<div class="card">
+  <nz-card nzHoverable class="nz-card" [nzCover]="coverTemplate">
+    <nz-card-meta nzTitle="Calum Scott 卡倫史考特台北2024演唱會資訊" nzDescription="百億串流「英倫情人」 Calum Scott
+
+    千呼萬喚！卡倫史考特2024台北演唱會來了！
+
+    紅髮艾德欽點世界巡演專場嘉賓！
+
+    療癒歌聲讓現場5.6萬粉絲為之動容
+
+    ♫♪《You are the reason》
+
+    ♫♪《Dancing on my own》
+
+    ♫♪《At Your Worst》
+
+    將情感化為感動的音符，
+
+    撫慰每個需要被擁抱的心靈。
+
+    "></nz-card-meta>
+    <nz-divider nzType="horizontal"></nz-divider>
+    <nz-table class="table" nzTemplateMode>
+      <thead>
+        <tr>
+          <th>
+            活動日期</th>
+          <th>地點</th>
+          <th>票價</th>
+          <th>剩餘數量 </th>
+          <th>訂購數量 </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td> 2023/03/13</td>
+          <td>台北小巨蛋</td>
+          <td>1000</td>
+          <td>100</td>
+          <td>
+            <nz-input-number
+            [(ngModel)]="quantity"
+            [nzMin]="1"
+            [nzMax]="10"
+            [nzStep]="1"
+            [nzSize]="'large'"
+          ></nz-input-number>
+          </td>
+          <td>
+            <button nz-button nzType="primary" routerLink="/search">
+              訂購
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+  <ng-template #coverTemplate>
+    <img class="photo" alt="example" src="../../../../../assets/demo.jpg" />
+  </ng-template>
+</div>
+<div>
+
+</div>

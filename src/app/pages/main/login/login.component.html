@@ -1,0 +1,38 @@
+<div class="card">
+  <nz-card nzTitle="登入" nzHoverable class="nz-card">
+    <form nz-form  [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+
+
+
+      <nz-form-item >
+        <nz-form-label [nzSpan]="8" nzFor="email" >帳號 E-mail</nz-form-label >
+        <nz-form-control [nzSpan]="14" nzErrorTip="Please input your username!" >
+          <nz-input-group nzPrefixIcon="user">
+            <input nz-input  type="email" id="email" formControlName="email" placeholder="email" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+
+
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzFor="password">密碼 password</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input type="password" id="password" />
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <nz-divider nzType="horizontal"></nz-divider>
+
+      <button nz-button  [nzType]="'primary'">Log in</button>
+
+      <div nz-col [nzSpan]="5" class="forgot">
+        <a >忘記密碼?</a>
+      </div>
+
+
+    </form>
+  </nz-card>
+</div>

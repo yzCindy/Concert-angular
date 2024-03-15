@@ -1,0 +1,47 @@
+<div class="card">
+  <nz-card nzHoverable class="nz-card">
+    <nz-card-meta nzTitle="節目管理"></nz-card-meta>
+    <nz-divider nzType="horizontal"></nz-divider>
+    <nz-table class="table" [nzData]="array" [nzPageSize]="2" #rowSelectionTable nzShowPagination
+
+    >
+    <!-- <nz-table class="table" [nzData]="listOfData" [nzPageSize]="3" nzShowPagination
+    (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+    > -->
+      <thead>
+        <tr>
+          <th>圖片</th>
+          <th>
+            活動日期</th>
+            <th>
+              活動名稱</th>
+              <th>
+                活動地點</th>
+          <th>票價</th>
+          <th>開放票量 </th>
+          <th>剩餘票量 </th>
+          <th>狀態</th>
+          <th>設定</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of array">
+          <td class="photo-td">  <img class="photo" alt="example" src="../../../../../assets/demo.jpg" /></td>
+          <td>{{data}}</td>
+          <td>{{data}}</td>
+          <td>{{data}}</td>
+          <td>{{data}}</td>
+          <td>{{data}}</td>
+          <td>{{data}}</td>
+          <td>{{data}}</td>
+          <td>
+            <button nz-button nzType="primary" routerLink="/search">
+              修改
+            </button>
+          </td>
+        </tr>
+
+      </tbody>
+    </nz-table>
+  </nz-card>
+</div>

@@ -1,0 +1,25 @@
+
+
+.navbar-logo {
+  display: inline-block; /* 讓元素與其他內容並排顯示 */
+  margin-right: 20px; /* 調整 Logo 和連結之間的間距 */
+  margin-left: 30px;
+
+}
+
+.theme-switcher {
+  float: right; /* 將切換器靠右對齊 */
+}
+
+.submenu{
+  background-color: none;
+  width: 100%;
+  text-align: center;
+
+}
+
+
+.login-control , .register-control{
+  float: right; /* 靠右對齊 */
+  margin-right: 5px;
+}

@@ -1,0 +1,41 @@
+
+
+.card {
+  width: 100%;
+  display: flex;
+  margin: auto;
+  justify-content: center;
+}
+
+
+.photo {
+  width: 100%;
+  height: 100%;
+}
+.ant-table-cell{
+  width: 10%;
+}
+
+.nz-card{
+width:1000px
+}
+
+.table{
+  width: 100%;
+  margin: 10px auto;
+  justify-content: center;
+
+}
+
+[nz-button] {
+  color: aliceblue;
+  background-color: lightcoral;
+  border-radius: 5px;
+  border:white;
+  float: center;
+
+}
+
+th,  td{
+  text-align: center !important;
+}

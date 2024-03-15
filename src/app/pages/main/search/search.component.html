@@ -1,0 +1,23 @@
+
+<div class="search-item">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="input search text" />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <span nz-icon nzType="search"></span>
+  </ng-template>
+</div>
+
+<div class="card">
+  <div nz-row [nzGutter]="6" class="card-row">
+    <div nz-col [nzSpan]="6" *ngFor="let item of array" class="card-item">
+      <nz-card nzTitle="Card title">
+        <img class="photo" src="../../../../assets/demo.jpg">
+        <p>Card content</p>
+        <button nz-button nzType="primary" routerLink="/search/1">
+          立即訂購
+        </button>
+      </nz-card>
+    </div>
+  </div>
+</div>
