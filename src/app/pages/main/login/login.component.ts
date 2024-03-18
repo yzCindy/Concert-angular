@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
-import { ReactiveFormsModule, } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzCardModule } from 'ng-zorro-antd/card';

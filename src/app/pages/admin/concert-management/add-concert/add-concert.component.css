@@ -1,0 +1,55 @@
+:host ::ng-deep .upload-list-inline .ant-upload-list-item {
+  float: left;
+  width: 200px;
+}
+:host ::ng-deep .upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
+  float: left;
+}
+:host ::ng-deep .upload-list-inline .ant-upload-animate-enter {
+  animation-name: uploadAnimateInlineIn;
+}
+:host ::ng-deep .upload-list-inline .ant-upload-animate-leave {
+  animation-name: uploadAnimateInlineOut;
+}
+
+
+.clearfix{
+  float: left;
+  display: flex;
+}
+
+
+[nz-button] {
+  color: aliceblue;
+  background-color: lightcoral;
+  border-radius: 5px;
+  border:white;
+  float: center;
+
+}
+
+
+.container{
+  padding: 20px;
+  margin:  20px auto;
+  width: 80%;
+  border: 1px solid pink;
+  border-radius: 10px;
+}
+
+
+[nzShowTime]{
+  float: left;
+  display: flex;
+}
+
+.img-info{
+  text-align: center;
+}
+
+
+.add-btn{
+  text-align: center;
+  display: flex;
+  padding-top: 50px;
+}
