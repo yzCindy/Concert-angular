@@ -22,7 +22,11 @@ export const authGuard: CanActivateFn = (
     return true;
   } else {
     msg.error("未有權限，請重新登入")
+
     console.log('hello cindy');
+
+    console.log('main hello');
+
     return router.navigateByUrl('/welcome');
   }
 
