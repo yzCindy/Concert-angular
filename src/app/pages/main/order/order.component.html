@@ -1,1 +1,73 @@
-<p>order works!</p>
+<div class="card">
+  <nz-card nzHoverable class="nz-card">
+    <h2>訂單紀錄</h2>
+    <nz-divider nzType="horizontal"></nz-divider>
+
+    <!-- ==============================================================標頭 -->
+
+
+    <!-- ==============================================================table strat -->
+
+    <ng-template #loadingSpinner><nz-spin nzSimple></nz-spin></ng-template>
+    <div *ngIf="!isLoading; else loadingSpinner">
+      <nz-table class="table "
+       [nzData]="orderArray"
+       [nzFrontPagination]="false"
+       [nzPageSize]="pageSize"
+       [nzTotal]="totalData"
+       nzShowPagination
+       (nzPageIndexChange)="onPageIndexChange($event)">
+        <thead>
+          <tr>
+            <th nzWidth="100px">
+              訂單編號</th>
+            <th nzWidth="100px">
+              購買日期</th>
+            <th nzWidth="100px">
+              活動日期</th>
+            <th nzWidth="150px">
+              活動名稱</th>
+            <th nzWidth="150px">
+              地點</th>
+            <th nzWidth="50px">
+              單價(TWD)</th>
+            <th nzWidth="100px">購買數量</th>
+            <th nzWidth="100px">總價 </th>
+            <th nzWidth="150px">設定</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <ng-template #indicatorTemplate><span nz-icon nzType="loading"></span></ng-template>
+
+          <ng-container *ngFor="let data of orderArray">
+
+
+            <tr>
+              <td>{{data.createdAt | date : 'yyyyMMdd' + data.orderId }}</td>
+              <td>{{data.createdAt | date : 'yyyy-MM-dd' }}</td>
+              <td>{{data.concertTime| date : 'yyyy-MM-dd' }}</td>
+              <td>{{data.concertName}}</td>
+              <td>{{data.address}}</td>
+              <td>{{data.price}}</td>
+              <td>{{data.quantity}}</td>
+              <td>{{data.totalPrice}}</td>
+              <td>
+                <button nz-button nzType="primary" nzSize="small" *ngIf="!data.isCancelled" (click)="cancelledOrder(data.orderId)">
+                  取消
+                </button>
+                <button nz-button class="cancell" nzType="primary" nzSize="small" *ngIf="data.isCancelled" disabled>
+                  已取消
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+
+      </nz-table>
+    </div>
+
+    <!-- ==============================================================table end -->
+
+  </nz-card>
+</div>

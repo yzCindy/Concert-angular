@@ -1,4 +1,4 @@
-<ul nz-menu nzMode="horizontal" class="navbar"  >
+<ul nz-menu nzMode="horizontal" class="navbar">
 
   <div class="navbar-logo">
     <span nz-icon nzType="smile"></span>
@@ -6,29 +6,48 @@
   </div>
 
   <li nz-menu-item>
-    <a routerLink="/welcome"><span nz-icon nzType="home" nzTheme="outline" ></span> &nbsp;&nbsp;首頁</a>
+    <a routerLink="/welcome"><span nz-icon nzType="home" nzTheme="outline"></span> &nbsp;&nbsp;首頁</a>
   </li>
 
   <li nz-menu-item>
-    <a routerLink="/search"><span nz-icon nzType="search" nzTheme="outline" ></span>&nbsp;&nbsp;探索活動</a>
+    <a routerLink="/search"><span nz-icon nzType="search" nzTheme="outline"></span>&nbsp;&nbsp;探索活動</a>
   </li>
-  <li nz-submenu nzTitle="會員中心" nzIcon="user">
-    <ul nz-menu nzMode="horizontal" >
-      <li nz-menu-item class="submenu ">   <a routerLink="/user"><span nz-icon nzType="database" nzTheme="outline" ></span>&nbsp;&nbsp;個人資訊</a></li>
-      <li nz-menu-item class="submenu ">   <a routerLink="/order"><span nz-icon nzType="unordered-list" nzTheme="outline" ></span>&nbsp;&nbsp;訂單紀錄</a></li>
+  <li nz-submenu nzTitle="會員中心" nzIcon="user" *ngIf="userBtn">
+    <ul nz-menu nzMode="horizontal">
+      <li nz-menu-item class="submenu "> <a routerLink="/user"><span nz-icon nzType="database"
+            nzTheme="outline"></span>&nbsp;&nbsp;個人資訊</a></li>
+      <li nz-menu-item class="submenu "> <a routerLink="/order"><span nz-icon nzType="unordered-list"
+            nzTheme="outline"></span>&nbsp;&nbsp;訂單紀錄</a></li>
     </ul>
   </li>
-  <li nz-submenu nzTitle="管理頁面" nzIcon="setting">
-    <ul nz-menu nzMode="horizontal" >
-      <li nz-menu-item class="submenu ">   <a routerLink="/concert-management"><span nz-icon nzType="play-circle" nzTheme="outline" ></span>&nbsp;&nbsp;活動管理</a></li>
-      <li nz-menu-item class="submenu ">   <a routerLink="/order-management"><span nz-icon nzType="unordered-list" nzTheme="outline" ></span>&nbsp;&nbsp;訂單管理</a></li>
+  <li nz-submenu nzTitle="管理頁面" nzIcon="setting" *ngIf="manageBtn">
+    <ul nz-menu nzMode="horizontal">
+      <li nz-menu-item class="submenu "> <a routerLink="/concert-management"><span nz-icon nzType="play-circle"
+            nzTheme="outline"></span>&nbsp;&nbsp;活動管理</a></li>
+      <li nz-menu-item class="submenu "> <a routerLink="/order-management"><span nz-icon nzType="unordered-list"
+            nzTheme="outline"></span>&nbsp;&nbsp;訂單管理</a></li>
     </ul>
   </li>
 
-  <li nz-menu-item class="login-control">
-    <a routerLink="/login"><span nz-icon nzType="login" nzTheme="outline" ></span>&nbsp;&nbsp;登入</a>
+  <li nz-menu-item class="login-control" *ngIf="logoutBtn" nz-popconfirm nzPopconfirmTitle="確定登出?"
+    nzPopconfirmPlacement="bottom" (nzOnConfirm)="logOut()">
+    <a> <span nz-icon nzType="logout" nzTheme="outline"></span>&nbsp;&nbsp;登出</a>
   </li>
-  <li nz-menu-item class="register-control">
+
+
+
+  <div class="login-control" *ngIf="logoutBtn">
+    Hello，{{name}}
+  </div>
+
+
+
+  <li nz-menu-item class="login-control" *ngIf="loginBtn">
+    <a routerLink="/login"><span nz-icon nzType="login" nzTheme="outline"></span>&nbsp;&nbsp;登入</a>
+  </li>
+
+
+  <li nz-menu-item class="register-control" *ngIf="registerBtn">
     <a routerLink="/register"><span nz-icon nzType="user-add" nzTheme="outline"></span>&nbsp;&nbsp;註冊</a>
   </li>
 

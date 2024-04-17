@@ -1,7 +1,7 @@
 import { CanActivateFn, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { inject } from '@angular/core';
+import {  inject } from '@angular/core';
 
 //service
 import { UserService } from './services/user.service';
@@ -9,16 +9,16 @@ import { UserService } from './services/user.service';
 //environment
 import { levelName } from '../environments/environment';
 
-export const authGuard: CanActivateFn = (
+export const managerGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
-): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean => {
-
+): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree => {
   const userService = inject(UserService);
   const msg = inject(NzMessageService);
   const router = inject(Router)
 
-  if (userService.level==levelName.user) {
+
+  if (userService.level == levelName.manager) {
     return true;
   } else {
     msg.error("未有權限，請重新登入")

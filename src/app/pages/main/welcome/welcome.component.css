@@ -18,8 +18,8 @@ h3 {
 
 .carousel{
   float: left;
-  height: 500px;
-  width: 600px;
+  height: 400px;
+  width: 700px;
   margin: 90px 200px;
 
 }
@@ -39,4 +39,18 @@ p {
   border-radius: 5px;
   border:lightcoral;
 
+}
+
+.photo{
+object-fit:cover;
+height: 400px;
+width: 700px;
+}
+
+
+nz-spin{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
 }

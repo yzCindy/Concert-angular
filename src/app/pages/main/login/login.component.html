@@ -1,37 +1,58 @@
 <div class="card">
   <nz-card nzTitle="登入" nzHoverable class="nz-card">
-    <form nz-form  [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
 
+    <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
 
-
-      <nz-form-item >
-        <nz-form-label [nzSpan]="8" nzFor="email" >帳號 E-mail</nz-form-label >
-        <nz-form-control [nzSpan]="14" nzErrorTip="Please input your username!" >
-          <nz-input-group nzPrefixIcon="user">
-            <input nz-input  type="email" id="email" formControlName="email" placeholder="email" />
-          </nz-input-group>
+      <nz-form-item>
+        <nz-form-label nzSpan="9" nzFor="email" nzRequired>帳號 Login Email</nz-form-label>
+        <nz-form-control nzSpan="12" nzHasFeedback [nzErrorTip]="emailErrorTpl">
+          <input nz-input formControlName="email" placeholder="請輸入帳號" type="email" />
+          <ng-template #emailErrorTpl let-control>
+            @if (control.errors?.['required']) {
+            *請輸入email
+            }
+            @if (control.errors?.['email']) {
+            *email格式錯誤，請重新輸入
+            }
+          </ng-template>
         </nz-form-control>
       </nz-form-item>
 
 
-
-
       <nz-form-item>
-        <nz-form-label [nzSpan]="8" nzFor="password">密碼 password</nz-form-label>
-        <nz-form-control [nzSpan]="14">
-          <input nz-input type="password" id="password" />
+        <nz-form-label nzSpan="9" nzFor="password" nzRequired>密碼 password</nz-form-label>
+        <nz-form-control nzSpan="12" nzHasFeedback [nzErrorTip]="pwdErrorTpl">
+          <nz-input-group [nzSuffix]="suffixTemplate">
+            <input nz-input [type]="passwordVisible ? 'password' : 'text'" formControlName="password" placeholder="請輸入密碼"
+              /></nz-input-group>
+              <ng-template #suffixTemplate>
+                <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                  (click)="passwordVisible = !passwordVisible"></span>
+              </ng-template>
+              <ng-template #pwdErrorTpl let-control>
+                <!-- ?表示control.errors可以是null，而此則是不為null時，則執行後面邏輯，否則不執行。 -->
+                @if (control.errors?.['required']) {
+                *請輸入密碼
+                }
+                @if (control.errors?.['min']) {
+                *長度最少8字，請重新輸入
+                }
+                @if (control.errors?.['max']) {
+                *長度最高20字，請重新輸入
+                }
+              </ng-template>
         </nz-form-control>
       </nz-form-item>
 
 
       <nz-divider nzType="horizontal"></nz-divider>
 
-      <button nz-button  [nzType]="'primary'">Log in</button>
 
-      <div nz-col [nzSpan]="5" class="forgot">
-        <a >忘記密碼?</a>
-      </div>
-
+      <nz-form-item>
+        <nz-form-control nzOffset="8" nzSpan="12">
+          <button nz-button [nzType]="'primary'">Log in</button>
+        </nz-form-control>
+      </nz-form-item>
 
     </form>
   </nz-card>

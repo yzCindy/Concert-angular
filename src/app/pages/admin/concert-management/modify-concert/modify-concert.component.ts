@@ -1,8 +1,9 @@
-import { CommonModule,NgFor } from '@angular/common';
-import { Component} from '@angular/core';
-import { ReactiveFormsModule, FormControl, FormGroup, Validators, NonNullableFormBuilder,FormsModule } from '@angular/forms';
+import { CommonModule, NgFor } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule, FormControl, FormGroup, Validators, NonNullableFormBuilder } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
-import { NzUploadFile, NzUploadChangeParam, NzUploadModule} from 'ng-zorro-antd/upload';
+import { NzUploadFile, NzUploadChangeParam, NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -15,20 +16,24 @@ import { NzDatePickerModule, DisabledTimeFn } from 'ng-zorro-antd/date-picker';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { Router, ActivatedRoute } from '@angular/router';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { differenceInCalendarDays, addDays } from 'date-fns';
-import { Router } from '@angular/router';
 
 //service
 import { ConcertsService } from '../../../../services/concerts.service';
 
 //interface
-import { ConcertRequest } from '../../../../models/concerts-request';
+import { ConcerModifyRequest } from '../../../../models/concerts-request';
+import { Concerts } from './../../../../models/concerts-response';
+
 
 //environment
-import { concertStatus,environment,ticketsRange } from '../../../../../environments/environment';
+import { ticketsRange, concertStatus, environment } from '../../../../../environments/environment';
+
 
 @Component({
-  selector: 'app-add-concert',
+  selector: 'app-modify-concert',
   standalone: true,
   imports: [
     CommonModule,
@@ -48,25 +53,27 @@ import { concertStatus,environment,ticketsRange } from '../../../../../environme
     NzSelectModule,
     NgFor,
     NzDividerModule,
-    NzCardModule
+    NzCardModule,
+    NzRadioModule
   ],
-  templateUrl: './add-concert.component.html',
-  styleUrl: './add-concert.component.css'
+  templateUrl: './modify-concert.component.html',
+  styleUrl: './modify-concert.component.css'
 })
-export class AddConcertComponent {
+export class ModifyConcertComponent implements OnInit {
 
   image = '';
-  imageContentType='';
+  imageContentType = '';
 
   //照片上傳api
   Img_API_URL = `${environment.API_URL}/concert/img`;
+
 
   defaultFileList: NzUploadFile[] = [
   ];
   photo = [...this.defaultFileList];
 
   saleQuantityList: string[] = ticketsRange.range;
-
+  saleStatus = concertStatus;
   validateForm: FormGroup<{
     concertName: FormControl<string>;
     concertTime: FormControl<string>;
@@ -75,17 +82,76 @@ export class AddConcertComponent {
     saleTime: FormControl<string>;
     price: FormControl<string>;
     saleQuantity: FormControl<string>;
+    status: FormControl<string>;
   }>;
 
-  //====處理表單日期====
+  concert: Concerts = {
+    id: 0,
+    userId: 0,
+    concertName: '',
+    concertTime: new Date(),
+    information: '',
+    address: '',
+    saleTime: new Date(),
+    price: 0,
+    saleQuantity: 0,
+    remaingQuantity: 0,
+    contentType: '',
+    image: '',
+    status: 0
+  };
+
+
+  radioValue = '';
+
+  //從路由取出資訊
+  getConcert(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.concertsService.searchConcert(id).subscribe(
+      response => {
+
+        this.concert = response.concert
+
+        //為表單控制項增加初始值
+        this.validateForm.patchValue(
+          {
+            concertName: response.concert.concertName,
+            concertTime: response.concert.concertTime.toString(),
+            information: response.concert.information.toString(),
+            address: response.concert.address,
+            saleTime: response.concert.saleTime.toString(),
+            price: response.concert.price.toString(),
+            saleQuantity: response.concert.saleQuantity.toString(),
+            status: response.concert.status.toString(),
+
+          }
+        )
+      }
+
+    )
+  }
+
+
+
+
+  //========處理表單日期========
   tomorrow = addDays(new Date(), 1);
   dayAfterTomorrow = addDays(new Date(), 2);
+
   //售票不可選的日期
   disabledDate = (current: Date): boolean =>
     // 不能選擇比明天還小的日期
     (differenceInCalendarDays(current, this.tomorrow)) < 0;
 
-  //====處理表單時間====
+  //活動不可選的日期
+  activityDisabledDate = (current: Date): boolean =>
+    (differenceInCalendarDays(current, this.dayAfterTomorrow)) < 0;
+
+
+
+
+
+  //========處理表單時間========
   range(start: number, end: number): number[] {
     const result: number[] = [];
     for (let i = start; i < end; i++) {
@@ -100,56 +166,41 @@ export class AddConcertComponent {
     nzDisabledSeconds: () => this.range(1, 60)
   });
 
-  //活動不可選的日期
-
-  activityDisabledDate = (current: Date): boolean =>
-    // 不能選擇
-    (differenceInCalendarDays(current,this.dayAfterTomorrow)) < 0;
 
 
 
-
-
-  //====表單送出====
+  //========表單送出========
   submitForm(): void {
 
     if (this.validateForm.valid) {
       console.log('submit', this.validateForm.value);
 
-      if (this.image == '') {
-        this.msg.error('請選擇圖片');
-        return;
-      }
-
-      let addConcertData: ConcertRequest = {
+      let modifyConcertData: ConcerModifyRequest = {
+        id: this.concert.id || 0,
+        userId: this.concert.userId || 0,
         concertName: this.validateForm.get('concertName')?.value || '',
-        concertTime: new Date( this.validateForm.get('concertTime')?.value || ''),
+        concertTime: new Date(this.validateForm.get('concertTime')?.value || ''),
         information: this.validateForm.get('information')?.value || '',
         address: this.validateForm.get('address')?.value || '',
         saleTime: new Date(this.validateForm.get('saleTime')?.value || ''),
         price: parseInt(this.validateForm.get('price')?.value || '0'),
         saleQuantity: parseInt(this.validateForm.get('saleQuantity')?.value || '0'),
-        remaingQuantity:  parseInt(this.validateForm.get('saleQuantity')?.value || '0'),
-        status: concertStatus.notSale,
-        image: this.image,
-        contentType:this.imageContentType,
-        createdAt:new Date()
+        remaingQuantity: parseInt(this.validateForm.get('saleQuantity')?.value || '0'),
+        status: parseInt(this.validateForm.get('status')?.value || '0'),
+        image: this.image != '' ? this.image : '',
+        contentType: this.imageContentType != '' ? this.imageContentType : this.concert.contentType
       }
-      console.log(addConcertData)
-      if(addConcertData!=null){
-        this.concertsService.addConcert(addConcertData).subscribe(
-          response=>{
-            if (response.status == 'ok' ){
+
+      if (modifyConcertData != null) {
+        this.concertsService.modifyConcert(modifyConcertData).subscribe(
+          response => {
+            if (response.status == 'ok') {
               this.msg.success(response.message);
               this.router.navigateByUrl('/concert-management')
-
             }
           }
-
-
         )
       }
-
     } else {
       Object.values(this.validateForm.controls).forEach(control => {
         if (control.invalid) {
@@ -183,18 +234,22 @@ export class AddConcertComponent {
       observer.next(isJpgOrPng && isLt2M);
       observer.complete();
     });
+
+
   /**
-   * 1.限制圖片上傳數量，只能上傳一張，且只保留最後上傳的照片
+   * 1.限制圖片上傳數
    * 2.將請求結果的圖片名稱放置於image屬性
    */
   handleChange(info: NzUploadChangeParam): void {
     let photo = info.fileList;
+    //提取陣列的最後一個值，使得照片將保留最後上傳的照片
     photo = photo.slice(-1);
     if (photo) {
       this.photo = photo;
       if (info.file.status === 'done') {
+        console.log(info.file)
         this.image = this.photo[0].response.imgName;
-        this.imageContentType=info.file.type ||'';
+        this.imageContentType = info.file.type || '';
         this.msg.success(`${info.file.name} ${this.photo[0].response.message}`);
       } else if (info.file.status === 'error') {
         this.msg.error(`${info.file.name} ${this.photo[0].response.message}`);
@@ -213,9 +268,10 @@ export class AddConcertComponent {
   constructor(
     private fb: NonNullableFormBuilder,
     private msg: NzMessageService,
-    private concertsService:ConcertsService,
-    private router:Router
-    ) {
+    private concertsService: ConcertsService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.validateForm = this.fb.group({
       concertName: ['', [Validators.required]],
       concertTime: ['', [Validators.required]],
@@ -224,8 +280,15 @@ export class AddConcertComponent {
       saleTime: ['', [Validators.required]],
       price: ['', [Validators.required]],
       saleQuantity: ['', [Validators.required]],
+      status: ['', [Validators.required]],
     });
+
+
+  }
+  ngOnInit(): void {
+    this.getConcert()
   }
 
-
 }
+
+

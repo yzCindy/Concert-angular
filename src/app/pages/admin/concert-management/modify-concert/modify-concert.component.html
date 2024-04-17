@@ -1,6 +1,6 @@
 <div class="card">
   <nz-card nzHoverable class="nz-card">
-<h2>新增活動</h2>
+<h2>修改活動</h2>
 <div class="container">
   <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
 
@@ -17,8 +17,8 @@
     <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>售票日期</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback nzErrorTip="*請選擇售票日期及時間">
-        <nz-date-picker nzShowTime formControlName="saleTime" id="saleTime" [nzSize]="'large'"
-        [nzShowTime]="{ nzFormat: 'HH:mm' }"
+        <nz-date-picker
+        nzShowTime formControlName="saleTime" id="saleTime" [nzSize]="'large'"
         nzFormat="yyyy-MM-dd HH:mm:ss"
         [nzDisabledDate]="disabledDate"
         [nzDisabledTime]="disabledDateTime"
@@ -28,9 +28,11 @@
     </nz-form-item>
 
     <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>活動日期</nz-form-label>
+      <nz-form-label [nzSm]="6" [nzXs]="24">活動日期</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback nzErrorTip="*請選活動日期及時間">
-        <nz-date-picker nzShowTime formControlName="concertTime" id="concertTime" [nzSize]="'large'"
+        <nz-date-picker
+        #endDatePicker
+        nzShowTime formControlName="concertTime" id="concertTime" [nzSize]="'large'"
         nzFormat="yyyy-MM-dd HH:mm:ss"
         [nzDisabledDate]="activityDisabledDate"
         [nzDisabledTime]="disabledDateTime"
@@ -46,7 +48,7 @@
     <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>活動地點</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback nzErrorTip="*請填寫詳細地址">
-        <input nz-input formControlName="address" id="address" placeHolder="請輸入地址" />
+        <input nz-input formControlName="address" id="address" placeHolder="請輸入地址"  />
       </nz-form-control>
       <span nz-typography nzType="secondary"> &nbsp;(請填完整地址)</span>
     </nz-form-item>
@@ -66,7 +68,7 @@
     <nz-form-item>
       <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>總票量</nz-form-label>
       <nz-form-control [nzSm]="6" [nzXs]="24" nzHasFeedback nzErrorTip="*請選擇數量">
-        <nz-select nzAllowClear nzPlaceHolder="Choose" formControlName="saleQuantity" id="saleQuantity">
+        <nz-select nzAllowClear nzPlaceHolder="Choose" formControlName="saleQuantity" id="saleQuantity"  >
           <nz-option *ngFor="let item of saleQuantityList" [nzValue]="item" [nzLabel]="item"></nz-option>
         </nz-select>
       </nz-form-control>
@@ -79,15 +81,22 @@
       <nz-form-label [nzSpan]="6" nzRequired>詳細介紹</nz-form-label>
       <nz-form-control [nzSpan]="14" nzHasFeedback nzErrorTip="*請填寫內容">
         <nz-textarea-count [nzMaxCharacterCount]="300">
-          <textarea maxlength="300" formControlName="information" nz-input rows="2" placeholder="請填寫內容"></textarea>
+          <textarea maxlength="300" formControlName="information" nz-input rows="2" placeholder="請填寫內容" ></textarea>
         </nz-textarea-count>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>原始照片</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <img class="photo" [src]="concert.image" />
       </nz-form-control>
     </nz-form-item>
 
 
 
     <nz-form-item>
-      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="image">節目照片</nz-form-label>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="image">新節目照片</nz-form-label>
       <nz-form-control [nzSm]="14" [nzXs]="24" >
         <div class="clearfix">
           <nz-upload
@@ -108,7 +117,21 @@
         </div>
       </nz-form-control>
     </nz-form-item>
-    <div nz-typography nzType="secondary" class="img-info"> x(1.請上傳jpg檔或png檔 2.圖片尺寸請低於2MB 3. 僅需一張)</div>
+    <div nz-typography nzType="secondary" class="img-info"> (1.請上傳jpg檔或png檔 2.圖片尺寸請低於2MB 3. 僅需一張)</div>
+
+
+
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>上架狀態</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback nzErrorTip="*請選擇數量">
+        <nz-radio-group formControlName="status" id="status"  >
+          <label nz-radio  [nzValue]="saleStatus.notSale.toString()">未販售</label>
+          <label nz-radio  [nzValue]="saleStatus.onSale.toString()">販售中</label>
+          <label nz-radio  [nzValue]="saleStatus.saleOut.toString()">已售完</label>
+        </nz-radio-group>
+      </nz-form-control>
+    </nz-form-item>
+
 
 
     <nz-form-item nz-row class="register-area" class="add-btn">

@@ -1,0 +1,54 @@
+.card {
+  width: 100%;
+  display: flex;
+  margin: auto;
+  justify-content: center;
+}
+
+.nz-card {
+  width: 2000px
+}
+
+.table {
+  width: 100%;
+  margin: 10px auto;
+  justify-content: center;
+
+}
+
+[nz-button] {
+  color: aliceblue;
+  background-color: lightcoral;
+  border-radius: 5px;
+  border: white;
+  float: center;
+
+}
+
+th,
+td {
+  text-align: center !important;
+}
+
+
+.add-concert {
+  float: right;
+  display: inline;
+  margin-bottom: 10px;
+  margin-right: 50px;
+}
+
+h2 {
+  text-align: center;
+}
+
+
+nz-spin{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cancell{
+  background-color: gray !important;
+}

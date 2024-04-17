@@ -15,7 +15,7 @@
 
 
 .nz-card{
-width:800px
+width:900px
 }
 
 .table{
@@ -37,3 +37,12 @@ width:800px
 th,  td{
   text-align: center !important;
 }
+
+
+nz-spin{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+

@@ -1,23 +1,43 @@
-
 <div class="search-item">
   <nz-input-group [nzSuffix]="suffixIconSearch">
-    <input type="text" nz-input placeholder="input search text" />
+    <input type="text" #key nz-input placeholder="輸入關鍵字進行查詢" (input)="selectByKey(key.value)" />
   </nz-input-group>
   <ng-template #suffixIconSearch>
-    <span nz-icon nzType="search"></span>
+    <span nz-icon nzType="search" (click)="selectByKey(key.value)"></span>
   </ng-template>
 </div>
-
-<div class="card">
-  <div nz-row [nzGutter]="6" class="card-row">
-    <div nz-col [nzSpan]="6" *ngFor="let item of array" class="card-item">
-      <nz-card nzTitle="Card title">
-        <img class="photo" src="../../../../assets/demo.jpg">
-        <p>Card content</p>
-        <button nz-button nzType="primary" routerLink="/search/1">
-          立即訂購
-        </button>
-      </nz-card>
+<ng-template #loadingSpinner><nz-spin nzSimple [nzSize]="'large'"></nz-spin></ng-template>
+<div *ngIf="concertArray && concertArray.length > 0; else loadingSpinner">
+  <div class="card">
+    <div nz-row [nzGutter]="6" class="card-row">
+      <div nz-col [nzSpan]="6" *ngFor="let item of concertArray" class="card-item">
+        <nz-card [nzTitle]="item.concertName">
+          <img class="photo" [src]="item.image">
+          <nz-divider nzType="horizontal"></nz-divider>
+          <div class="primary"> 時間:
+            <span>{{item.concertTime | date : 'yyyy-MM-dd HH:mm'}}</span>
+          </div>
+          <div class="primary"> 地點:
+            <span>{{item.address}}</span>
+          </div>
+          <div class="primary"> 剩餘數量:
+            <span>{{item.remaingQuantity}}</span>
+            / <span>單價:{{item.price}}</span>
+          </div>
+          <nz-divider nzType="horizontal"></nz-divider>
+          <button *ngIf="isSaleTime(item.saleTime,item.remaingQuantity) " nz-button nzType="primary" (click)="goOrder(item.id)">
+            立即訂購
+          </button>
+          <button class="notYetBtn" disabled *ngIf="!isSaleTime(item.saleTime,item.remaingQuantity) && item.remaingQuantity != 0 " nz-button nzType="primary" >
+            即將販售
+          </button>
+          <button class="saleOutBtn" disabled *ngIf="!isSaleTime(item.saleTime,item.remaingQuantity) && item.remaingQuantity == 0 " nz-button nzType="primary">
+            已售完
+          </button>
+        </nz-card>
+      </div>
     </div>
   </div>
+
+
 </div>

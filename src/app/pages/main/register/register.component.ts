@@ -1,27 +1,39 @@
+
 import { Component } from '@angular/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { FormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
-import { ReactiveFormsModule } from '@angular/forms';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { Router } from '@angular/router';
+import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
 
+
+//引用表單控制
 import {
-  AbstractControl,
-  AsyncValidatorFn,
   FormControl,
   FormGroup,
   NonNullableFormBuilder,
   ValidatorFn,
-  Validators
+  Validators,
+  AbstractControl,
+  ReactiveFormsModule,
+  FormsModule
 } from '@angular/forms';
 
-import { Observable, Observer } from 'rxjs';
+//environment
+import { levelName } from '../../../../environments/environment';
 
-import { NzSafeAny } from 'ng-zorro-antd/core/types';
+//interface
+import { RegisterRequest } from '../../../models/user-request';
 
+//service
+import { UserService } from '../../../services/user.service';
+import { CustomValidatorsService } from '../../../services/custom-validators.service';
 
 @Component({
   selector: 'app-register',
@@ -34,39 +46,66 @@ import { NzSafeAny } from 'ng-zorro-antd/core/types';
     NzInputNumberModule,
     FormsModule,
     NzFormModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NzRadioModule,
+    NzInputModule,
+    NzIconModule,
+    NzMessageModule
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
+
+  //控制填寫密碼時是否可見
+  passwordVisible = true;
+  password?: string;
+
   validateForm: FormGroup<{
     name: FormControl<string>;
-    mobile: FormControl<string>;
+    phone: FormControl<string>;
     email: FormControl<string>;
     password: FormControl<string>;
     confirm: FormControl<string>;
-    address:FormControl<string>;
+    address: FormControl<string>;
+    level: FormControl<string>;
   }>;
-
-  // current locale is key of the nzAutoTips
-  // if it is not found, it will be searched again with `default`
-  autoTips: Record<string, Record<string, string>> = {
-    'zh-cn': {
-      required: '必填项'
-    },
-    en: {
-      required: 'Input is required'
-    },
-    default: {
-      email: '邮箱格式不正确/The input is not valid email'
-    }
-  };
 
   submitForm(): void {
     if (this.validateForm.valid) {
-      console.log('submit', this.validateForm.value);
+      //驗證成功，且值可以是null，如果不為null則塞進去
+      const email = this.validateForm.get('email')?.value;
+      const password = this.validateForm.get('password')?.value;
+      const level = this.validateForm.get('level')?.value;
+      const name = this.validateForm.get('name')?.value;
+      const phone = this.validateForm.get('phone')?.value;
+      const address = this.validateForm.get('address')?.value;
+
+      let registerData: RegisterRequest = {
+        email: email ?? '',
+        //如果是NULL或是undefined就會選後面的
+        password: password || '',
+        level: parseInt(level || levelName.user.toString()),
+        name: name || '',
+        phone: phone || '',
+        address: address || ''
+      }
+
+      this.userService.registerFn(registerData).subscribe(
+        response => {
+          //註冊成功需重新登入
+          if (response && response.token != null) {
+            localStorage.setItem('token', response.token);
+            this.message.success(`${response.message}，請重新登入`);
+            this.router.navigateByUrl('/login');
+          } else {
+            //後端註冊失敗會留在原頁面並顯示錯誤訊息
+            this.message.error(response.message);
+          }
+        }
+      )
     } else {
+      //前端驗證失敗
       Object.values(this.validateForm.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();
@@ -76,88 +115,40 @@ export class RegisterComponent {
     }
   }
 
-  validateConfirmPassword(): void {
-    setTimeout(() => this.validateForm.controls.confirm.updateValueAndValidity());
-  }
+  // /**立即啟用密碼驗證的功能 */
+  // validateConfirmPassword(): void {
+  //   setTimeout(() => this.validateForm.controls.confirm.updateValueAndValidity());
+  // }
 
-  userNameAsyncValidator: AsyncValidatorFn = (control: AbstractControl) =>
-    new Observable((observer: Observer<MyValidationErrors | null>) => {
-      setTimeout(() => {
-        if (control.value === 'JasonWood') {
-          observer.next({
-            duplicated: { 'zh-cn': `用户名已存在`, en: `The username is redundant!` }
-          });
-        } else {
-          observer.next(null);
-        }
-        observer.complete();
-      }, 1000);
-    });
-
+  /**驗證再次確認的密碼是否相同 */
   confirmValidator: ValidatorFn = (control: AbstractControl): { [s: string]: boolean } => {
     if (!control.value) {
-      return { error: true, required: true };
+      return { required: true };
     } else if (control.value !== this.validateForm.controls.password.value) {
-      return { confirm: true, error: true };
+      return { confirm: true };
     }
     return {};
   };
 
-  constructor(private fb: NonNullableFormBuilder) {
-    // use `MyValidators`
-    const { required, maxLength, minLength, email, mobile } = MyValidators;
+  constructor(
+    private fb: NonNullableFormBuilder,
+    private userService: UserService,
+    private customValidators: CustomValidatorsService,
+    private router: Router,
+    private message: NzMessageService) {
+
     this.validateForm = this.fb.group({
-      name: ['', [required, maxLength(12), minLength(6)], [this.userNameAsyncValidator]],
-      mobile: ['', [required, mobile]],
-      email: ['', [required, email]],
-      password: ['', [required]],
+      name: ['', [Validators.required]],
+      phone: ['', [Validators.required, customValidators.phone]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, customValidators.passwordValidator]],
       confirm: ['', [this.confirmValidator]],
-      address: ['', [required, required]],
+      address: ['', [Validators.required]],
+      level: [levelName.user.toString(), [Validators.required]],
+
     });
   }
-}
 
 
-// current locale is key of the MyErrorsOptions
-export type MyErrorsOptions = { 'zh-cn': string; en: string } & Record<string, NzSafeAny>;
-export type MyValidationErrors = Record<string, MyErrorsOptions>;
 
-export class MyValidators extends Validators {
-  static override minLength(minLength: number): ValidatorFn {
-    return (control: AbstractControl): MyValidationErrors | null => {
-      if (Validators.minLength(minLength)(control) === null) {
-        return null;
-      }
-      return { minlength: { 'zh-cn': `最小长度为 ${minLength}`, en: `MinLength is ${minLength}` } };
-    };
-  }
-
-  static override maxLength(maxLength: number): ValidatorFn {
-    return (control: AbstractControl): MyValidationErrors | null => {
-      if (Validators.maxLength(maxLength)(control) === null) {
-        return null;
-      }
-      return { maxlength: { 'zh-cn': `最大长度为 ${maxLength}`, en: `MaxLength is ${maxLength}` } };
-    };
-  }
-
-  static mobile(control: AbstractControl): MyValidationErrors | null {
-    const value = control.value;
-
-    if (isEmptyInputValue(value)) {
-      return null;
-    }
-
-    return isMobile(value)
-      ? null
-      : { mobile: { 'zh-cn': `手机号码格式不正确`, en: `Mobile phone number is not valid` } };
-  }
-}
-
-function isEmptyInputValue(value: NzSafeAny): boolean {
-  return value == null || value.length === 0;
-}
-
-function isMobile(value: string): boolean {
-  return typeof value === 'string' && /(^1\d{10}$)/.test(value);
 }

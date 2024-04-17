@@ -1,9 +1,11 @@
 <ng-container>
-<div class="carousel">
-  <nz-carousel nzAutoPlay>
-    @for (index of array; track index) {
+  <ng-template #loadingSpinner><nz-spin nzSimple [nzSize]="'large'"></nz-spin></ng-template>
+  <div *ngIf="imgArray && imgArray.length > 0; else loadingSpinner">
+  <div class="carousel">
+  <nz-carousel nzAutoPlay nzAutoPlaySpeed="2000">
+    @for (index of imgArray; track index) {
     <div nz-carousel-content>
-      <h3>{{ index }}</h3>
+      <img class="photo" [src]="index" >
     </div>
     }
   </nz-carousel>
@@ -13,5 +15,5 @@
     立即查看
   </button>
 
-
+  </div>
 </ng-container>

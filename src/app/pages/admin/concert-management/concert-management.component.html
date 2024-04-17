@@ -1,8 +1,8 @@
 <div class="card">
   <nz-card nzHoverable class="nz-card">
-    <nz-card-meta nzTitle="活動管理"> </nz-card-meta>
+    <h2>活動管理</h2>
     <button nz-button nzType="primary" routerLink="/search" class="add-concert" (click)="addConcertBtnFn()"
-      *ngIf="!addConcertBtn" [nzSize]="'large'">
+      [nzSize]="'large'">
       新增活動
     </button>
     <nz-divider nzType="horizontal"></nz-divider>
@@ -12,70 +12,82 @@
 
     <!-- ==============================================================table strat -->
 
-    <nz-table class="table" [nzData]="array" [nzPageSize]="6" nzShowPagination *ngIf="!addConcertBtn">
-      <thead>
-        <tr>
-          <th nzWidth="100px">
-            活動日期</th>
-          <th nzWidth="200px">圖片</th>
-          <th nzWidth="150px">
-            活動名稱</th>
-          <th nzWidth="100px">剩餘票量 </th>
-          <th nzWidth="100px">狀態</th>
-          <th nzWidth="150px">設定</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let data of array">
+    <ng-template #loadingSpinner><nz-spin nzSimple></nz-spin></ng-template>
+    <div *ngIf=" !isLoading ; else loadingSpinner">
+      <nz-table class="table "
+      [nzData]="concertArray"
+      [nzFrontPagination]="false"
+      [nzPageSize]="pageSize"
+      [nzTotal]="totalData"
+      nzShowPagination
+      (nzPageIndexChange)="onPageIndexChange($event)"
+      >
+
+        <thead>
           <tr>
-            <td>2024/03/18</td>
-            <td class="photo-td"> <img class="photo" alt="example" src="../../../../../assets/demo.jpg" /></td>
-            <td>Calum Scott 卡倫史考特台北2024演唱會資訊</td>
-            <td>{{data}}</td>
-            <td>上架中</td>
-            <td>
-              <button nz-button nzType="primary" routerLink="/search" (click)="showModal()">
-                修改
-              </button>
-
-                <nz-modal
-                nzWidth="800px"
-                nzMask="false"
-                nzClosable="true"
-                nzDraggable="true"
-                nzCentered
-                nzFooter=" "
-                [(nzVisible)]="isVisible"
-                nzTitle="Calum Scott 卡倫史考特台北2024演唱會資訊"
-                (nzOnCancel)="handleCancel()"
-              >
-
-                <ng-container *nzModalContent>
-                  <h2>修改活動</h2>
-                  <app-add-concert> </app-add-concert>
-                </ng-container>
-              </nz-modal>
-              /
-              <button nz-button nzType="primary" routerLink="/search">
-                刪除
-              </button>
-            </td>
+            <th nzWidth="100px">
+              活動日期</th>
+            <th nzWidth="100px">
+              販售日期</th>
+            <th nzWidth="150px">圖片</th>
+            <th nzWidth="150px">
+              活動名稱</th>
+            <th nzWidth="150px">
+              地點</th>
+            <th nzWidth="50px">
+              單價(TWD)</th>
+            <th nzWidth="50px">
+              總票量</th>
+            <th nzWidth="100px">報名人數 </th>
+            <th nzWidth="100px">剩餘票量 </th>
+            <th nzWidth="100px">狀態</th>
+            <th nzWidth="150px">設定</th>
           </tr>
-        </ng-container>
+        </thead>
+
+        <tbody>
+          <ng-container *ngFor="let data of concertArray">
 
 
-      </tbody>
-    </nz-table>
+            <tr>
+              <td>{{data.concertTime | date : 'yyyy-MM-dd HH:mm' }}</td>
+              <td>{{data.saleTime | date : 'yyyy-MM-dd HH:mm' }}</td>
+              <td class="photo-td"> <img class="photo" alt="" [src]="data.image" /></td>
+              <td>{{data.concertName}}</td>
+              <td>{{data.address}}</td>
+              <td>{{data.price}}</td>
+              <td>{{data.saleQuantity}}</td>
+              <td>{{data.saleQuantity-data.remaingQuantity}}</td>
+              <td>{{data.remaingQuantity}}</td>
+              <td>
+                <span *ngIf="data.status == saleStatus.notSale" nz-icon [nzType]="'stop'" [nzTheme]="'twotone'"
+                  [nzTwotoneColor]="'#DB145F'"></span>
+                <span *ngIf="data.status == saleStatus.saleOut" nz-icon [nzType]="'close-circle'" [nzTheme]="'twotone'"
+                  [nzTwotoneColor]="'#D2D0C5'"></span>
+                <span *ngIf="data.status == saleStatus.onSale" nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'"
+                  [nzTwotoneColor]="'#40DBC8'"></span>
+                {{data.status == saleStatus.notSale ? '未販售' : data.status==saleStatus.onSale? '販售中': '已售完'
+                }}
+              </td>
+              <td>
+                <button nz-button nzType="primary"  (click)="goModify(data.id)" nzSize="small">
+                  修改
+                </button>
+                /
+                <button nz-button nzType="primary" nzSize="small" (click)="goDelete(data.id)">
+                  刪除
+                </button>
+              </td>
 
-    <!-- ==============================================================table end -->
+            </tr>
+          </ng-container>
+        </tbody>
 
-    <div *ngIf="addConcertBtn">
-
-      <h2>新增活動</h2>
-      <app-add-concert>
-      </app-add-concert>
+      </nz-table>
     </div>
 
+
+    <!-- ==============================================================table end -->
 
   </nz-card>
 </div>
